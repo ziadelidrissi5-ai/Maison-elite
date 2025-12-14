@@ -1,66 +1,34 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 const Newsletter = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      toast.success("Merci pour votre inscription !", {
-        description: "Vous recevrez bientôt nos dernières nouveautés.",
-      });
+      toast.success("Inscription réussie", { description: "Bienvenue dans l'univers Maison Élite." });
       setEmail("");
     }
   };
 
   return (
-    <section className="py-24 md:py-32 bg-charcoal relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-
-      <div className="container mx-auto px-6 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto text-center"
-        >
-          <p className="text-gold font-sans text-sm tracking-[0.3em] uppercase mb-4">
-            Newsletter
-          </p>
-          <h2 className="font-serif text-3xl md:text-5xl text-cream font-light mb-6">
-            Restez informé de nos
-            <br />
-            <span className="italic">dernières créations</span>
-          </h2>
-          <p className="text-cream/60 mb-10 max-w-md mx-auto">
-            Inscrivez-vous pour recevoir en avant-première nos nouveautés, 
-            conseils déco et offres exclusives.
-          </p>
-
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="Votre adresse email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 h-14 bg-cream/10 border-cream/20 text-cream placeholder:text-cream/40 focus:border-gold"
-              required
-            />
-            <Button type="submit" variant="luxury-gold" size="xl">
-              S'inscrire
-            </Button>
+    <section ref={ref} className="py-24 lg:py-32 bg-foreground text-background">
+      <div className="container mx-auto px-6 lg:px-10">
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8 }} className="max-w-2xl mx-auto text-center">
+          <p className="text-background/60 text-xs tracking-[0.25em] uppercase mb-6">Newsletter</p>
+          <h2 className="font-serif text-4xl lg:text-5xl font-light mb-6">Restez Inspiré</h2>
+          <p className="text-background/70 leading-relaxed mb-10">Inscrivez-vous pour recevoir nos dernières collections, événements exclusifs et inspirations décoration.</p>
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Votre adresse email" className="flex-1 bg-transparent border border-background/30 px-6 py-4 text-background placeholder:text-background/50 focus:outline-none focus:border-background transition-colors text-sm tracking-wide" required />
+            <Button type="submit" className="bg-background text-foreground hover:bg-background/90 transition-all duration-300 px-8 py-6 text-xs tracking-widest uppercase">S'inscrire<ArrowRight className="w-4 h-4 ml-2" /></Button>
           </form>
-
-          <p className="text-cream/40 text-xs mt-6">
-            En vous inscrivant, vous acceptez notre politique de confidentialité.
-          </p>
+          <p className="text-background/40 text-xs mt-6">En vous inscrivant, vous acceptez notre politique de confidentialité.</p>
         </motion.div>
       </div>
     </section>
